@@ -17,7 +17,7 @@ Es por eso que se tienen las carpetas: `pregunta1`, `pregunta3`, `pregunta4` y `
 
 Para ejecutar los programas, se debe saltar a la carpeta de la pregunta que se desea ejecutar y seguir las instrucciones en el archivo `README.md` de cada carpeta. Es importante estar en la carpeta correcta, ya que los programas usan rutas relativas para importar los módulos.
 
-La primera parte de la pregunta 1 y la pregunta 2 son teóricas y fueron escritas en LaTeX, por lo que se encuentran en el archivo `examen1.pdf`.
+La primera parte de la pregunta 1 y la pregunta 2 son teóricas y fueron escritas en LaTeX, por lo que se encuentran en el archivo [`Examen-1-1910175.pdf`](Examen-1-1910175.pdf).
 
 ## Estudiante
 
