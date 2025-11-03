@@ -9,13 +9,13 @@ Es necesario tener instalado [Python 3.10+](https://www.python.org/downloads/) p
 
 ## Estructura del examen
 
-En este repositorio se incluyen programas para las preguntas 1, 3, 4 y 5 del examen y para mantener una estructura sencilla pero organizada, cada pregunta tiene su propia carpeta, con todos los archivos necesarios para su ejecución.
+En este repositorio se incluyen programas para las preguntas 1, 2, 3 y 4 del examen y para mantener una estructura sencilla pero organizada, cada pregunta tiene su propia carpeta, con todos los archivos necesarios para su ejecución.
 
-Es por eso que se tienen las carpetas: `pregunta1`, `pregunta3`, `pregunta4` y `pregunta5`.
+Es por eso que se tienen las carpetas: `pregunta1`, `pregunta2`, `pregunta3` y `pregunta4`.
 
-Para ejecutar los programas, se debe saltar a la carpeta de la pregunta que se desea ejecutar y seguir las instrucciones en el archivo `README.md` de cada carpeta. Es importante estar en la carpeta correcta, ya que los programas usan rutas relativas para importar los módulos.
+Para ejecutar los programas, se debe saltar a la carpeta de la pregunta que se desea ejecutar y seguir las instrucciones en el archivo `README.md` de cada carpeta.
 
-La primera parte de la pregunta 1 y la pregunta 2 son teóricas y fueron escritas en LaTeX, por lo que se encuentran en el archivo [`Examen-1-1910175.pdf`](Examen-1-1910175.pdf).
+La parte teórica del examen fue escrita en LaTeX, por lo que se encuentra en el archivo [`Examen-2-1910175.pdf`](Examen-2-1910175.pdf).
 
 ## Estudiante
 
