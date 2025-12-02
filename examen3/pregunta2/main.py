@@ -11,7 +11,7 @@ Comandos interactivos (separados por espacios):
 Todas las salidas en español.
 """
 
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple
 
 
 class TypeErrorDef(Exception):
@@ -22,7 +22,7 @@ class TypeManager:
     """Gestiona definiciones de tipos y cálculo de tamaño/alineación/padding."""
 
     def __init__(self):
-        # name -> dict with kind and info
+        # Mapeo de tipos: nombre -> diccionario con clave 'kind' y la información del tipo
         self.types: Dict[str, Dict] = {}
 
     # ---- definiciones ----
@@ -62,15 +62,15 @@ class TypeManager:
     def _compute_struct(
         self, field_names: List[str], strategy: str
     ) -> Tuple[int, int, int]:
-        # devuelve (total_size, alignment, wasted_bytes)
-        # estrategia: 'unpacked' (sin empaquetar), 'packed', 'reordered'
+        # Devuelve (tamaño_total, alineación, bytes_desperdiciados)
+        # estrategia: 'unpacked' (sin empaquetar), 'packed' (empaquetado), 'reordered' (reordenado)
         fields = []
         for fname in field_names:
             f = self.types[fname]
             if f["kind"] == "atomic":
                 fields.append((f["size"], f["align"]))
             else:
-                # permitir structs/unions anidados: calcular sus propiedades recursivamente con 'unpacked'
+                # Permitir structs/unions anidados: calcular sus propiedades recursivamente usando 'unpacked'
                 sz, al, _ = self.describe_props(
                     fname
                 )  # usa la versión por defecto (unpacked)
@@ -83,12 +83,12 @@ class TypeManager:
             wasted = 0
             return total_size, alignment, wasted
 
-        # para 'unpacked' y 'reordered'
+        # Para 'unpacked' y 'reordered'
         if strategy == "reordered":
             # ordenar por alineación descendente, romper empates por tamaño descendente
             fields = sorted(fields, key=lambda x: (-x[1], -x[0]))
 
-        # calcular alignment struct = max de alineaciones
+        # Calcular la alineación del struct = máximo de las alineaciones de sus campos
         struct_align = max((a for _, a in fields), default=1)
         offset = 0
         sum_field_sizes = 0
@@ -101,7 +101,7 @@ class TypeManager:
         return total_size, struct_align, wasted
 
     def _compute_union(self, field_names: List[str]) -> Tuple[int, int, int]:
-        # union: size = max(field_size) rounded up to max alignment
+        # Unión: tamaño = máximo de los tamaños de campo, redondeado por la máxima alineación
         sizes = []
         aligns = []
         for fname in field_names:
@@ -122,7 +122,7 @@ class TypeManager:
 
     # ---- interfaz pública ----
     def describe_props(self, name: str) -> Tuple[int, int, int]:
-        """Devuelve (size, align, wasted) usando la estrategia 'unpacked' por defecto."""
+        """Devuelve (tamaño, alineación, desperdicio) usando la estrategia 'unpacked' por defecto."""
         if name not in self.types:
             raise TypeErrorDef("Tipo no definido")
         t = self.types[name]
@@ -136,7 +136,7 @@ class TypeManager:
         raise TypeErrorDef("Tipo inválido")
 
     def describe_all_strategies(self, name: str) -> Dict[str, Tuple[int, int, int]]:
-        """Devuelve un dict con claves: 'sin_empaquetar', 'empaquetado', 'reordenado' -> (size,align,wasted)."""
+        """Devuelve un diccionario con claves: 'sin_empaquetar', 'empaquetado', 'reordenado' -> (tamaño,alineación,desperdicio)."""
         if name not in self.types:
             raise TypeErrorDef("Tipo no definido")
         t = self.types[name]
@@ -161,6 +161,7 @@ class TypeManager:
     # ---- utilidades REPL / parsing ----
     @staticmethod
     def parse_command(line: str) -> Tuple[str, List[str]]:
+        # Separar la línea en palabras; devolver comando en MAYÚSCULAS y lista de argumentos
         parts = line.strip().split()
         if not parts:
             return "", []
@@ -188,9 +189,17 @@ def repl():
                     print("Uso: ATOMICO <nombre> <representación> <alineación>")
                     continue
                 name, size_s, align_s = args
-                tm.define_atomic(name, int(size_s), int(align_s))
+                try:
+                    size_i = int(size_s)
+                    align_i = int(align_s)
+                except ValueError:
+                    print(
+                        "Argumentos de ATOMICO: tamaño y alineación deben ser enteros"
+                    )
+                    continue
+                tm.define_atomic(name, size_i, align_i)
                 print(
-                    f"Tipo atómico '{name}' definido (size={size_s}, align={align_s})"
+                    f"Tipo atómico '{name}' definido (size={size_i}, align={align_i})."
                 )
             elif cmd == "STRUCT":
                 if len(args) < 2:
@@ -198,14 +207,14 @@ def repl():
                     continue
                 name, *fields = args
                 tm.define_struct(name, fields)
-                print(f"Struct '{name}' definido con campos: {fields}")
+                print(f"Struct '{name}' definido con campos: {fields}.")
             elif cmd == "UNION":
                 if len(args) < 2:
                     print("Uso: UNION <nombre> <tipo> [<tipo> ...]")
                     continue
                 name, *fields = args
                 tm.define_union(name, fields)
-                print(f"Union '{name}' definido con campos: {fields}")
+                print(f"Union '{name}' definido con campos: {fields}.")
             elif cmd == "DESCRIBIR":
                 if len(args) != 1:
                     print("Uso: DESCRIBIR <nombre>")
@@ -220,12 +229,14 @@ def repl():
                         "reordenado": "Reordenando campos óptimamente",
                     }[k]
                     print(
-                        f"  {etiqueta}: tamaño={sz} bytes, alineación={al}, desperdicio={wasted} bytes"
+                        f"  {etiqueta}: tamaño={sz} bytes, alineación={al}, desperdicio={wasted} bytes."
                     )
             else:
                 print("Comando desconocido.")
-        except Exception as e:
+        except TypeErrorDef as e:
             print(f"Error: {e}")
+        except Exception as e:
+            print(f"Error inesperado: {e}")
 
 
 if __name__ == "__main__":

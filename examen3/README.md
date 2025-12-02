@@ -14,6 +14,28 @@ Es por eso que solo hay una carpeta llamada `pregunta2`.
 
 El resto de la parte escrita del examen fue hecha en LaTeX, por lo que se encuentra en el archivo [`Examen-3-1910175.pdf`](Examen-3-1910175.pdf).
 
+## Dependencias y ejecución
+
+ - Archivo de dependencias de la `pregunta2`: `pregunta2/requirements.txt`.
+
+Pasos rápidos para poder ejecutar el programa y las pruebas unitarias. Es importante estar en la capeta `examen3` al ejecutar los comandos.
+
+```bash
+# Instalar dependencias necesarias para correr las pruebas y el coverage
+pip install -r pregunta2/requirements.txt
+
+# Ejecutar el programa (REPL interactivo)
+python -m pregunta2.main
+# o
+python pregunta2/main.py
+
+# Ejecutar la suite de pruebas
+pytest -q pregunta2
+
+# Ejecutar coverage y reporte
+coverage run -m pytest -q pregunta2 && coverage report -m
+```
+
 ## Estudiante
 
 - Luis Isea [@lmisea](https://github.com/lmisea) (Carnet 19-10175).
